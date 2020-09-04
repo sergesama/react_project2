@@ -35,7 +35,7 @@ class RegistrationForm extends Component {
 		var currentDate=new Date().getDate();
 		var lifeYear;
 		var lifeMonth;
-		var lifeDay=Math.round((new Date().getTime()-birthDate.getTime())/ (1000*60*60*24));
+		var lifeDay;
 
 		switch (birthMonth) {
 			case '1':
@@ -112,16 +112,46 @@ class RegistrationForm extends Component {
 				break;
 		}
 
-		if(currentMonth<birthMonth || currentMonth==birthMonth && currentDate<birthDay)
+		if(currentMonth<birthMonth || currentMonth==birthMonth && currentDate<birthDay )
 		{
 			lifeYear=currentYear-birthYear-1;
-			lifeMonth=12-birthMonth+currentMonth+lifeYear*12;
+			lifeMonth=12-birthMonth+currentMonth;
+		}
+		else if(currentMonth>birthMonth || currentMonth==birthMonth && currentDate>=birthDay)
+		{
+			lifeYear=currentYear-birthYear;
+			lifeMonth=currentMonth-birthMonth;
+		}
+		if(currentDate>=birthDay)
+		{
+			lifeDay=currentDate-birthDay;
 		}
 		else
 		{
-			lifeYear=currentYear-birthYear;
-			lifeMonth=currentMonth-birthMonth+lifeYear*12;
+			lifeMonth--;
+			if(lifeMonth<0)
+			{
+				lifeMonth=11;
+				lifeYear--;
+			}
+			if(birthMonth==1 || birthMonth==3 ||birthMonth==5 ||birthMonth==7 ||birthMonth==8 ||birthMonth==10 ||birthMonth==12)
+			{
+				lifeDay=currentDate+31-birthDay;
+			}
+			else if(birthMonth==4 || birthMonth==6 ||birthMonth==9 ||birthMonth==11)
+			{
+				lifeDay=currentDate+30-birthDay;
+			}
+			else if(birthMonth==2 && ((birthYear%4==0 && birthYear%100!=0)||(birthYear%400)))
+			{
+				lifeDay=currentDate+29-birthDay;
+			}
+			else
+			{
+				lifeDay=currentDate+28-birthDay;
+			}
 		}
+		
 		this.setState({date:'Тебе '+lifeYear+' лет '+lifeMonth+' месяцев и '+lifeDay+' дней. Твой знак зодиака:'})
 
 	}
